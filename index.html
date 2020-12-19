@@ -1,18 +1,118 @@
 <html>
 	<head>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap" rel="stylesheet">
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+		<script
+		  src="https://code.jquery.com/jquery-3.5.1.min.js"
+		  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+		  crossorigin="anonymous"></script>
+		<style>
+			body {
+				font-family: 'Homemade Apple', cursive;
+				background-color: #f5fff5;
+				font-size: 70px;
+				background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
+				/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+			}
+
+			#nacho{
+				display: none; 
+				width: auto;
+				max-height: calc(100vh - 50px); /* This will calculate the 100% viewport height minus 50px */
+				max-width: 100%;
+				min-height: 100px !important;
+				margin-top: 25px;
+			}
+
+		</style>
 	</head>
 	<body>
 		<div class="container">
-          <div class="row">
-            <div class="col">
-				<div class="text-center">
-					<img  class="img-fluid" src="https://i.ytimg.com/vi/fNSdPmbL6O8/maxresdefault.jpg"/>
+          <div class="row" style="">
+			<div class="col-4 mt-5">
+				<p>Nacho</p>
+				<p>Ruiz</p>
+				<p>Moreno</p>
+				<iframe src="https://open.spotify.com/embed/track/003vvx7Niy0yvhvHt4a68B" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+			</div>
+            <div class="col-8">
+				<div class="text-center" id="placeholder">
+					<img id="#nacho" class=""   src="" alt="" style="">
 				</div>
             </div>
           </div>
         </div>
+	<script>
+
+		var getRandomImageId = function() {
+			return Math.floor(Math.random() * (6 - 1) + 1); 
+		}
+
+		var uniqueRandoms = [];
+		var numRandoms = 69;
+		function makeUniqueRandom() {
+			// refill the array if needed
+			if (!uniqueRandoms.length) {
+				for (var i = 0; i < numRandoms; i++) {
+					uniqueRandoms.push(i);
+				}
+			}
+			var index = Math.floor(Math.random() * uniqueRandoms.length);
+			var val = uniqueRandoms[index];
+
+			// now remove that value from the array
+			uniqueRandoms.splice(index, 1);
+
+			return val + 1;
+
+		}
+
+		var loadImage = function(photoUrl, done) {
+			var imgPreload = new Image();
+			$(imgPreload).attr({
+				src: photoUrl
+			});
+
+			if (imgPreload.complete || imgPreload.readyState === 4) {
+				done(imgPreload, 1);
+			} else {
+				$(imgPreload).on( "load", function (response, status, xhr) {
+					done(imgPreload, 1);
+				});
+			}
+		}
+
+		var first = true;
+		var timeout = 5000;
+		var nextImage = function() {
+			if(first) {
+				loadImage("https://nachoruizmoreno.github.io/web/fotos/" + makeUniqueRandom() + ".jpeg", function(next, code) {
+					$("#placeholder").append($(next));
+					next.id = "nacho";
+					$("#nacho").fadeIn(1500);
+				});
+				first = false;
+			}
+			setTimeout(function() {
+				loadImage("https://nachoruizmoreno.github.io/web/fotos/" + makeUniqueRandom() + ".jpeg", function(next, code) {
+					$("#nacho").fadeOut(1500, function() {
+						$("#placeholder").empty();
+						$("#placeholder").append($(next));
+						next.id = "nacho";
+						$("#nacho").fadeIn(1500);
+						nextImage();
+					});
+				});
+			}, timeout);
+		}
+
+
+		$( document ).ready(function() {
+			nextImage();
+		});
+	</script>
 	</body>
 </html>
 
